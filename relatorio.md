@@ -41,7 +41,11 @@ Fonte: `Car details v3.csv` (Kaggle/CarDekho). Variáveis originais: nome do ve�
 
 A distribuição de preços é assimétrica à direita, com mediana inferior à média. Boxplots indicam que veículos a diesel e com transmissão automática tendem a preços mais elevados. Correlações positivas foram observadas entre preço e ano, potência e cilindrada; correlação negativa entre preço e quilometragem.
 
-### 2.4 Modelagem
+### 2.4 Análise multivariada (PCA)
+
+Complementando a EDA bivariada, foi aplicada PCA sobre as variáveis numéricas padronizadas (excluindo o preço). O scree plot indica que as duas primeiras componentes concentram boa parte da variância. A contribuição por componente mostra que **ano**, **potência** e **torque** dominam o PC1, enquanto **quilometragem** e **consumo** ganham peso no PC2. O círculo de correlação revela um agrupamento entre atributos do motor (`engine_cc`, `max_power_bhp`, `torque_nm`). A comparação **Petrol vs Diesel** mostra estruturas semelhantes, com leve diferença na variância explicada por segmento.
+
+### 2.5 Modelagem
 
 - **Partição:** 80% treino / 20% teste (`random_state=42`).
 - **Algoritmos:** Regressão Linear (baseline), Random Forest (200 árvores, `max_depth=20`) e KNN (`k=7`, pesos por distância).

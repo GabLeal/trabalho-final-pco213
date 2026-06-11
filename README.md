@@ -10,7 +10,7 @@ Previsão de preço de carros usados com aprendizado de máquina.
 | `projeto_pco213_car_price.ipynb` | Notebook com EDA, limpeza, modelagem e interpretação |
 | `relatorio.md` | Relatório estilo artigo (adaptar ao template SIGAA) |
 | `apresentacao.md` | Roteiro de slides para o seminário (15 min) |
-| `outputs/` | Figuras e resumo JSON gerados pela execução |
+| `outputs/` | Figuras (EDA, PCA) e resumo JSON gerados pela execução |
 | `requirements.txt` | Dependências Python |
 
 ## Como executar
