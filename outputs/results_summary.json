@@ -1,0 +1,80 @@
+{
+  "cleaning": {
+    "raw": 8128,
+    "duplicates": 1202,
+    "outliers_removed": 263,
+    "final": 6663
+  },
+  "results": [
+    {
+      "modelo": "Regressão Linear",
+      "cv_mae": 109242.52904717685,
+      "cv_rmse": 158453.72524445775,
+      "cv_r2": 0.7901960460084575,
+      "test_mae": 110375.99634208313,
+      "test_rmse": 164388.09235842046,
+      "test_r2": 0.7835314923831169
+    },
+    {
+      "modelo": "Random Forest",
+      "cv_mae": 71304.29341074049,
+      "cv_rmse": 116317.3233001143,
+      "cv_r2": 0.8870261386479278,
+      "test_mae": 68755.88031932477,
+      "test_rmse": 117420.36210730637,
+      "test_r2": 0.8895563267863854
+    },
+    {
+      "modelo": "KNN",
+      "cv_mae": 81260.92404816889,
+      "cv_rmse": 131306.23049193143,
+      "cv_r2": 0.8557121170371472,
+      "test_mae": 81103.79228221867,
+      "test_rmse": 132221.69431573607,
+      "test_r2": 0.8599576313957367
+    }
+  ],
+  "best_model": "Random Forest",
+  "top_features": [
+    {
+      "feature": "year",
+      "importance": 0.2996879203142518
+    },
+    {
+      "feature": "max_power_bhp",
+      "importance": 0.293601059519511
+    },
+    {
+      "feature": "torque_nm",
+      "importance": 0.2634327117199486
+    },
+    {
+      "feature": "km_driven",
+      "importance": 0.03169524425133775
+    },
+    {
+      "feature": "engine_cc",
+      "importance": 0.02701043179292729
+    },
+    {
+      "feature": "mileage_kmpl",
+      "importance": 0.024212450366386053
+    },
+    {
+      "feature": "brand_Mercedes-Benz",
+      "importance": 0.01012095545651463
+    },
+    {
+      "feature": "brand_Toyota",
+      "importance": 0.008990839539869426
+    },
+    {
+      "feature": "brand_Tata",
+      "importance": 0.0060525219960075914
+    },
+    {
+      "feature": "transmission_Automatic",
+      "importance": 0.004985511984493908
+    }
+  ]
+}
