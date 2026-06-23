@@ -3,3 +3,11 @@ __pycache__/
 .ipynb_checkpoints/
 outputs/*.png
 .DS_Store
+
+*.fls
+*.log
+*.fdb_latexmk
+*.aux
+*.out
+*.synctex.gz
+*.toc

@@ -5,76 +5,191 @@
     "outliers_removed": 263,
     "final": 6663
   },
+  "split": "GroupShuffleSplit por nome do veículo (sem vazamento)",
+  "tuning": {
+    "best_rf_params": {
+      "max_depth": 16,
+      "min_samples_leaf": 2,
+      "n_estimators": 120
+    }
+  },
+  "stat_test": {
+    "models": [
+      "XGBoost",
+      "Gradient Boosting"
+    ],
+    "t": 2.9037986390695965,
+    "p": 0.04395028303981381
+  },
   "results": [
     {
       "modelo": "Regressão Linear",
-      "cv_mae": 109242.52904717685,
-      "cv_rmse": 158453.72524445775,
-      "cv_r2": 0.7901960460084575,
-      "test_mae": 110375.99634208313,
-      "test_rmse": 164388.09235842046,
-      "test_r2": 0.7835314923831169
+      "cv_mae": 79079.46158597614,
+      "cv_mae_std": 5094.947769821642,
+      "cv_rmse": 133909.9300632014,
+      "cv_rmse_std": 14920.826939471377,
+      "cv_mape": 0.17583952291079943,
+      "cv_r2": 0.84665165777312,
+      "cv_r2_std": 0.03435941322307215,
+      "test_mae": 72546.59257756009,
+      "test_rmse": 125662.52790500928,
+      "test_mape": 0.1749872352019852,
+      "test_r2": 0.876597718649912
     },
     {
-      "modelo": "Random Forest",
-      "cv_mae": 71304.29341074049,
-      "cv_rmse": 116317.3233001143,
-      "cv_r2": 0.8870261386479278,
-      "test_mae": 68755.88031932477,
-      "test_rmse": 117420.36210730637,
-      "test_r2": 0.8895563267863854
+      "modelo": "Árvore de Decisão",
+      "cv_mae": 91814.3785617152,
+      "cv_mae_std": 5297.2621969612455,
+      "cv_rmse": 155336.20035274042,
+      "cv_rmse_std": 12554.64951118706,
+      "cv_mape": 0.21278833515828813,
+      "cv_r2": 0.7946354150208786,
+      "cv_r2_std": 0.033068634426160065,
+      "test_mae": 88565.39837740886,
+      "test_rmse": 160496.72219871427,
+      "test_mape": 0.21360608104866272,
+      "test_r2": 0.7986999238376264
     },
     {
       "modelo": "KNN",
-      "cv_mae": 81260.92404816889,
-      "cv_rmse": 131306.23049193143,
-      "cv_r2": 0.8557121170371472,
-      "test_mae": 81103.79228221867,
-      "test_rmse": 132221.69431573607,
-      "test_r2": 0.8599576313957367
+      "cv_mae": 86136.00136411817,
+      "cv_mae_std": 6019.345697299873,
+      "cv_rmse": 145094.20347926643,
+      "cv_rmse_std": 14082.586542813795,
+      "cv_mape": 0.19745847749243314,
+      "cv_r2": 0.8184253873200463,
+      "cv_r2_std": 0.040760045396595876,
+      "test_mae": 82232.5655868095,
+      "test_rmse": 138288.04770913825,
+      "test_mape": 0.19824245834464016,
+      "test_r2": 0.85055516991837
+    },
+    {
+      "modelo": "Gradient Boosting",
+      "cv_mae": 75697.6357751054,
+      "cv_mae_std": 3055.5418228769977,
+      "cv_rmse": 123926.34536347401,
+      "cv_rmse_std": 10319.855902093776,
+      "cv_mape": 0.17235014832293108,
+      "cv_r2": 0.8686254081886448,
+      "cv_r2_std": 0.024769897944871413,
+      "test_mae": 70175.36498169706,
+      "test_rmse": 115458.63015459405,
+      "test_mape": 0.1701202795348648,
+      "test_r2": 0.8958247849322724
+    },
+    {
+      "modelo": "Random Forest (tuned)",
+      "cv_mae": 78360.38519109003,
+      "cv_mae_std": 4025.730732006596,
+      "cv_rmse": 132324.87702328022,
+      "cv_rmse_std": 14133.168045625327,
+      "cv_mape": 0.18019727504749186,
+      "cv_r2": 0.8497204432054094,
+      "cv_r2_std": 0.03481059179788787,
+      "test_mae": 73525.70314128064,
+      "test_rmse": 122037.36839438604,
+      "test_mape": 0.17754616300637005,
+      "test_r2": 0.8836149298857803
+    },
+    {
+      "modelo": "XGBoost",
+      "cv_mae": 71839.1515625,
+      "cv_mae_std": 4472.0147959717915,
+      "cv_rmse": 117531.5046875,
+      "cv_rmse_std": 13292.16983129593,
+      "cv_mape": 0.16476448476314545,
+      "cv_r2": 0.8813182353973389,
+      "cv_r2_std": 0.028646714606347764,
+      "test_mae": 64985.80078125,
+      "test_rmse": 103739.63223378036,
+      "test_mape": 0.16231557726860046,
+      "test_r2": 0.9158990383148193
     }
   ],
-  "best_model": "Random Forest",
-  "top_features": [
+  "best_model": "XGBoost",
+  "top_features_impurity": [
     {
       "feature": "year",
-      "importance": 0.2996879203142518
+      "importance": 0.14175505936145782
     },
     {
       "feature": "max_power_bhp",
-      "importance": 0.293601059519511
+      "importance": 0.10124065726995468
+    },
+    {
+      "feature": "model_Toyota Innova",
+      "importance": 0.09168682247400284
     },
     {
       "feature": "torque_nm",
-      "importance": 0.2634327117199486
-    },
-    {
-      "feature": "km_driven",
-      "importance": 0.03169524425133775
+      "importance": 0.07770184427499771
     },
     {
       "feature": "engine_cc",
-      "importance": 0.02701043179292729
-    },
-    {
-      "feature": "mileage_kmpl",
-      "importance": 0.024212450366386053
-    },
-    {
-      "feature": "brand_Mercedes-Benz",
-      "importance": 0.01012095545651463
-    },
-    {
-      "feature": "brand_Toyota",
-      "importance": 0.008990839539869426
+      "importance": 0.07604900002479553
     },
     {
       "feature": "brand_Tata",
-      "importance": 0.0060525219960075914
+      "importance": 0.05807885155081749
+    },
+    {
+      "feature": "model_Maruti Swift",
+      "importance": 0.02876308187842369
     },
     {
       "feature": "transmission_Automatic",
-      "importance": 0.004985511984493908
+      "importance": 0.02659037336707115
+    },
+    {
+      "feature": "brand_Toyota",
+      "importance": 0.021587230265140533
+    },
+    {
+      "feature": "brand_Chevrolet",
+      "importance": 0.021294625476002693
+    }
+  ],
+  "top_features_permutation": [
+    {
+      "feature": "year",
+      "importance": 0.49490855932235717
+    },
+    {
+      "feature": "max_power_bhp",
+      "importance": 0.293084180355072
+    },
+    {
+      "feature": "torque_nm",
+      "importance": 0.09429196119308472
+    },
+    {
+      "feature": "brand",
+      "importance": 0.07090212106704712
+    },
+    {
+      "feature": "engine_cc",
+      "importance": 0.05446360111236572
+    },
+    {
+      "feature": "km_driven",
+      "importance": 0.034095048904418945
+    },
+    {
+      "feature": "transmission",
+      "importance": 0.030513179302215577
+    },
+    {
+      "feature": "model",
+      "importance": 0.026619839668273925
+    },
+    {
+      "feature": "owner",
+      "importance": 0.006482815742492676
+    },
+    {
+      "feature": "fuel",
+      "importance": 0.00562666654586792
     }
   ]
 }

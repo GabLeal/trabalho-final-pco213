@@ -1,6 +1,6 @@
 # Seminário PCO213 — Previsão de Preço de Carros Usados
 
-**Duração sugerida:** 15 minutos  
+**Duração sugerida:** 15 minutos
 **Formato:** slides para conversão em PowerPoint/Google Slides/PDF
 
 ---
@@ -9,7 +9,7 @@
 
 **Previsão de Preço de Carros Usados com Aprendizado de Máquina**
 
-PCO213 — UFJF — 1º semestre/2026  
+PCO213 — UNIFEI — 1º semestre/2026
 [Nomes dos integrantes do grupo]
 
 ---
@@ -28,7 +28,8 @@ PCO213 — UFJF — 1º semestre/2026
 | Item | Valor |
 |------|------:|
 | Registros brutos | 8.128 |
-| Após limpeza | 6.663 |
+| Após deduplicação | 6.926 |
+| Após limpeza (final) | 6.663 |
 | Features finais | 12 (7 numéricas + 5 categóricas) |
 
 Variáveis: ano, km, combustível, transmissão, marca, potência, torque, cilindrada, etc.
@@ -39,43 +40,51 @@ Variáveis: ano, km, combustível, transmissão, marca, potência, torque, cilin
 
 ```
 Dados brutos → Deduplicação → Parsing de campos textuais
-            → Remoção de outliers → EDA
+            → Remoção de outliers → EDA + PCA
             → Imputação + Encoding + Normalização
-            → 3 modelos + Cross-validation 5-fold
-            → Comparação e interpretação
+            → Alvo em escala log (log1p)
+            → Split AGRUPADO pelo veículo (anti-vazamento)
+            → Tuning + 6 modelos + CV 5-fold agrupada
+            → Teste estatístico + interpretação (permutação) + resíduos
 ```
 
 ---
 
-## Slide 5 — EDA (principais achados)
+## Slide 5 — EDA e PCA (principais achados)
 
-- Preço com distribuição assimétrica (cauda alta)
+- Preço com distribuição **assimétrica à direita** (justifica o log do alvo)
 - **Ano** e **quilometragem** correlacionados com preço (+ e −, respectivamente)
 - Diesel e transmissão automática associados a preços maiores
-- ~2,7% de missing em atributos técnicos (tratados por imputação)
+- ~2,9% de missing em atributos técnicos (tratados por imputação)
+- **PCA:** 3 componentes concentram ~80% da variância; atributos de motor dominam o PC1
 
-*Inserir figura: `outputs/eda_boxplots.png` ou gráficos do notebook*
+*Inserir figuras: histogramas/boxplots do notebook e `outputs/pca_scree_full.png`*
 
 ---
 
 ## Slide 6 — Pré-processamento
 
 1. Extração de **marca** do campo `name`
-2. Conversão: `"74 bhp"` → 74, `"23.4 kmpl"` → 23,4
-3. Outliers: percentis 1–99 em preço e km
-4. **OneHotEncoder** + **StandardScaler** em pipeline scikit-learn
+2. Conversão: `"74 bhp"` → 74; `"23.4 kmpl"` → 23,4
+3. Outliers: percentis 1–99 em preço e km; ano ≥ 1990
+4. **OneHotEncoder** + **StandardScaler** em pipeline scikit-learn (sem vazamento)
+5. **Alvo em escala log** (`log1p`/`expm1`) para estabilizar a variância
 
 ---
 
 ## Slide 7 — Modelos avaliados
 
-| Modelo | Justificativa |
-|--------|---------------|
+| Modelo | Papel |
+|--------|-------|
 | Regressão Linear | Baseline interpretável |
-| Random Forest | Relações não lineares + importância de features |
-| KNN | Método lazy, comparação com vizinhos |
+| Árvore de Decisão | Partições não lineares simples |
+| KNN | Método lazy, vizinhança |
+| Gradient Boosting | Ensemble sequencial (corrige resíduos) |
+| Random Forest (tuned) | Ensemble com hiperparâmetros via GridSearchCV |
+| **XGBoost** | Boosting otimizado (estado da arte) |
 
-Validação: **5-fold CV** no treino + hold-out 20% teste
+Validação: **5-fold CV agrupada** + hold-out 20% teste
+Métricas: **MAE, RMSE, MAPE, R²**
 
 ---
 
@@ -83,71 +92,81 @@ Validação: **5-fold CV** no treino + hold-out 20% teste
 
 | Modelo | MAE (CV) | RMSE (CV) | R² (CV) |
 |--------|---------:|----------:|--------:|
-| Regressão Linear | 109.243 | 158.454 | 0,79 |
-| **Random Forest** | **71.304** | **116.317** | **0,89** |
-| KNN | 81.261 | 131.306 | 0,86 |
+| Regressão Linear | 79.079 | 133.910 | 0,847 |
+| Árvore de Decisão | 91.814 | 155.336 | 0,795 |
+| KNN | 86.136 | 145.094 | 0,818 |
+| Gradient Boosting | 75.698 | 123.926 | 0,869 |
+| Random Forest (tuned) | 78.360 | 132.325 | 0,850 |
+| **XGBoost** | **71.839** | **117.532** | **0,881** |
 
-**Melhor modelo: Random Forest**
+Split agrupado (anti-vazamento): 5.183 treino / 1.480 teste.
 
 ---
 
 ## Slide 9 — Resultados (Teste)
 
-| Modelo | MAE | RMSE | R² |
-|--------|----:|-----:|---:|
-| Regressão Linear | 110.376 | 164.388 | 0,78 |
-| **Random Forest** | **68.756** | **117.420** | **0,89** |
-| KNN | 81.104 | 132.222 | 0,86 |
+| Modelo | MAE | RMSE | MAPE | R² |
+|--------|----:|-----:|-----:|---:|
+| Regressão Linear | 72.547 | 125.663 | 17,5% | 0,877 |
+| Árvore de Decisão | 88.565 | 160.497 | 21,4% | 0,799 |
+| KNN | 82.233 | 138.288 | 19,8% | 0,851 |
+| Gradient Boosting | 70.175 | 115.459 | 17,0% | 0,896 |
+| Random Forest (tuned) | 73.526 | 122.037 | 17,8% | 0,884 |
+| **XGBoost** | **64.986** | **103.740** | **16,2%** | **0,916** |
 
-Erro médio ~69 mil INR no melhor modelo
-
----
-
-## Slide 10 — Importância das variáveis
-
-Top 3 preditores (Random Forest):
-
-1. **Ano** — 30%
-2. **Potência máxima (bhp)** — 29%
-3. **Torque (Nm)** — 26%
-
-Km rodados e cilindrada têm peso menor; marca premium também contribui.
-
-*Inserir gráfico de barras do notebook (seção 6)*
+**XGBoost** melhor em tudo; supera o GB com **p = 0,044** (teste t pareado).
 
 ---
 
-## Slide 11 — Real vs Previsto
+## Slide 10 — Importância das variáveis (permutação)
 
-- Scatter plot: eixo x = preço real, eixo y = preço previsto
-- Pontos próximos à diagonal indicam boas predições
-- Resíduos maiores em veículos de alto valor (cauda da distribuição)
+Top preditores (XGBoost, queda no R²):
 
-*Inserir figura do notebook (seção 6)*
+1. **Ano** — 0,49
+2. **Potência máxima (bhp)** — 0,29
+3. **Torque (Nm)** — 0,09
+4. **Marca** — 0,07 (maior que na impureza!)
+5. **Cilindrada (cc)** — 0,05
+
+*Importância por permutação corrige o viés da importância por impureza.*
+
+*Inserir `outputs/permutation_importance.png`*
+
+---
+
+## Slide 11 — Significância e resíduos
+
+- **Teste t pareado:** XGBoost > Gradient Boosting (t = 2,90, **p = 0,044**)
+- Ensembles têm **menor variância entre dobras** (predições mais estáveis)
+- **Resíduos** centrados em zero e simétricos → sem viés sistemático
+
+*Inserir `outputs/residuals.png`*
 
 ---
 
 ## Slide 12 — Conclusões
 
 - Dataset **Car details v3** é **apto** ao projeto após limpeza
-- Random Forest supera Linear e KNN (R² ≈ 0,89)
+- **Ensembles** superam Linear, Árvore e KNN
+- **XGBoost** é o melhor (R² = 0,916 no teste), de forma **estatisticamente significativa**
+- Split **agrupado** evita vazamento → resultado mais honesto
 - Ano e especificações do motor são os principais drivers
-- Pipeline completo: EDA → preprocess → CV → interpretação
 
 ---
 
 ## Slide 13 — Limitações e trabalhos futuros
 
-- Dados de um único país/mercado
-- Possível melhoria: agrupamento de modelos, validação temporal
-- Transferência da metodologia para domínios do mestrado
+- Dados de um único país/mercado (Índia); desbalanceamento entre marcas
+- Nome reduzido a marca/modelo (sem versão); sem validação temporal
+- Futuro: **SHAP**, **LightGBM**/redes neurais tabulares
+- Futuro: validação **temporal** e quantificação de incerteza
 
 ---
 
 ## Slide 14 — Demonstração / Perguntas
 
 - Código: `projeto_pco213_car_price.ipynb`
-- Relatório: `relatorio.md`
+- Artigo: `relatorio/Article_PCO213.pdf`
 - **Perguntas?**
 
 ---
@@ -157,7 +176,7 @@ Km rodados e cilindrada têm peso menor; marca premium também contribui.
 | Bloco | Tempo |
 |-------|------:|
 | Contexto + dataset | 2 min |
-| EDA + preprocess | 3 min |
+| EDA + PCA + preprocess | 3 min |
 | Modelos + resultados | 5 min |
 | Interpretação + conclusão | 3 min |
 | Perguntas | 2 min |
